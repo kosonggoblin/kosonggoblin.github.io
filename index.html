@@ -1,4 +1,3 @@
-
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -13,17 +12,16 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            background: linear-gradient(135deg, #1b2735 0%, #090a0f 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            cursor: default;
+            padding: 20px;
         }
 
-        /* STARFIELD BACKGROUND */
-        .stars-container {
+        /* Simplified Stars - hanya dengan CSS gradient */
+        .stars-simple {
             position: fixed;
             top: 0;
             left: 0;
@@ -31,370 +29,54 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 80px 20px, #fff, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 150px 90px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 250px 150px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 350px 50px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 500px 200px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 600px 300px, #fff, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 750px 100px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 900px 400px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 1050px 250px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 1200px 150px, #fff, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 50px 400px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 300px 500px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 550px 600px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 800px 700px, #fff, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 1000px 550px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 1100px 650px, #fff, rgba(0,0,0,0));
+            background-repeat: no-repeat;
+            background-size: 200px 200px, 150px 150px, 180px 180px, 250px 250px, 
+                            220px 220px, 160px 160px, 240px 240px, 170px 170px,
+                            260px 260px, 210px 210px, 190px 190px, 230px 230px,
+                            270px 270px, 200px 200px, 250px 250px, 180px 180px,
+                            280px 280px, 220px 220px;
+            opacity: 0.6;
         }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) ease-in-out infinite;
-            animation-delay: var(--delay);
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
-        }
-
-        /* SHOOTING STARS */
-        .shooting-star {
-            position: absolute;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
-            animation: shoot 3s linear infinite;
-            animation-delay: var(--shoot-delay);
-            opacity: 0;
-        }
-
-        @keyframes shoot {
-            0% {
-                transform: translateX(0) translateY(0) rotate(-45deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-500px) translateY(500px) rotate(-45deg);
-                opacity: 0;
-            }
-        }
-
-        /* PLANETS */
-        .planet-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            animation: orbit var(--orbit-duration) linear infinite;
-            box-shadow: inset -25px -25px 40px rgba(0,0,0,0.5),
-                        0 0 60px var(--glow-color);
-        }
-
-        @keyframes orbit {
-            0% { transform: translate(var(--start-x), var(--start-y)) rotate(0deg); }
-            25% { transform: translate(var(--mid-x), var(--mid-y)) rotate(90deg); }
-            50% { transform: translate(var(--end-x), var(--end-y)) rotate(180deg); }
-            75% { transform: translate(calc(var(--mid-x) * -0.5), calc(var(--mid-y) * -0.5)) rotate(270deg); }
-            100% { transform: translate(var(--start-x), var(--start-y)) rotate(360deg); }
-        }
-
-        /* EARTH */
-        .earth {
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle at 30% 30%, 
-                #4fa83d, #2d6b1e 30%, #1a4a8a 50%, #0d2b5e 70%, #071a3b 100%);
-            top: 10%;
-            right: -5%;
-            animation: floatPlanet 8s ease-in-out infinite;
-        }
-
-        .earth::before {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 20%;
-            width: 30%;
-            height: 20%;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            transform: rotate(-30deg);
-        }
-
-        /* Continents on Earth */
-        .earth::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: 
-                radial-gradient(circle at 35% 40%, #2d6b1e 10%, transparent 10%),
-                radial-gradient(circle at 50% 35%, #3a8a25 15%, transparent 15%),
-                radial-gradient(circle at 60% 50%, #2d6b1e 12%, transparent 12%),
-                radial-gradient(circle at 40% 60%, #4fa83d 8%, transparent 8%),
-                radial-gradient(circle at 55% 45%, #1a5a1a 10%, transparent 10%);
-            opacity: 0.8;
-        }
-
-        /* MOON */
-        .moon {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 40% 40%, #e8e8e8, #b0b0b0 50%, #707070 100%);
-            top: 5%;
-            right: 8%;
-            animation: orbitMoon 4s ease-in-out infinite;
-        }
-
-        .moon::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: 
-                radial-gradient(circle at 30% 30%, rgba(0,0,0,0.1) 5%, transparent 5%),
-                radial-gradient(circle at 60% 50%, rgba(0,0,0,0.15) 8%, transparent 8%),
-                radial-gradient(circle at 45% 70%, rgba(0,0,0,0.1) 6%, transparent 6%);
-        }
-
-        @keyframes orbitMoon {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(-30px, -20px); }
-            50% { transform: translate(-60px, 0); }
-            75% { transform: translate(-30px, 20px); }
-        }
-
-        @keyframes floatPlanet {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(5deg); }
-        }
-
-        /* SATURN */
-        .saturn {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle at 40% 40%, 
-                #f4d03f, #d4a017 30%, #b8860b 60%, #8b6914 100%);
-            bottom: -5%;
-            left: -5%;
-            animation: floatPlanet 10s ease-in-out infinite;
-        }
-
-        .saturn-ring {
-            position: absolute;
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            border: 15px solid rgba(210, 180, 140, 0.3);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotateX(75deg);
-            box-shadow: 0 0 20px rgba(210, 180, 140, 0.2);
-        }
-
-        .saturn-ring::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 8px solid rgba(210, 180, 140, 0.5);
-            top: -4px;
-            left: -4px;
-        }
-
-        /* MARS */
-        .mars {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at 35% 35%, 
-                #e74c3c, #c0392b 40%, #922b21 70%, #641e16 100%);
-            bottom: 15%;
-            right: 20%;
-            animation: floatPlanet 6s ease-in-out infinite;
-            animation-delay: 1s;
-        }
-
-        /* ASTRONAUT SVG */
-        .astronaut-container {
-            position: fixed;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .astronaut {
-            animation: floatAstronaut 12s ease-in-out infinite;
-        }
-
-        @keyframes floatAstronaut {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            10% { transform: translate(20px, -30px) rotate(5deg); }
-            20% { transform: translate(50px, -10px) rotate(-3deg); }
-            30% { transform: translate(30px, 20px) rotate(8deg); }
-            40% { transform: translate(-10px, 30px) rotate(-5deg); }
-            50% { transform: translate(-40px, 10px) rotate(3deg); }
-            60% { transform: translate(-20px, -20px) rotate(-8deg); }
-            70% { transform: translate(10px, -40px) rotate(5deg); }
-            80% { transform: translate(30px, -15px) rotate(-3deg); }
-            90% { transform: translate(15px, 10px) rotate(7deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        /* MAIN CONTAINER */
+        /* MAIN CONTAINER - lebih ringan */
         .main-container {
             position: relative;
             z-index: 10;
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(30px);
-            border-radius: 40px;
-            padding: 50px;
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: clamp(30px, 5vw, 50px);
             text-align: center;
             max-width: 650px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5),
-                        inset 0 0 30px rgba(255, 255, 255, 0.05);
-            animation: containerEntry 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes containerEntry {
-            0% {
-                opacity: 0;
-                transform: scale(0.5) rotateY(90deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotateY(0deg);
-            }
-        }
-
-        /* GLOWING ORB */
-        .glowing-orb {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, 
-                rgba(100, 149, 237, 0.4), 
-                rgba(138, 43, 226, 0.2), 
-                transparent 70%);
-            border-radius: 50%;
-            filter: blur(20px);
-            animation: orbPulse 3s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes orbPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.5); opacity: 0.8; }
-        }
-
-        /* APP ICON */
-        .app-icon-wrapper {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 30px;
-        }
-
-        .app-icon {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 70px;
-            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.5);
-            animation: iconFloat 4s ease-in-out infinite;
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .icon-ring {
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: calc(100% + 40px);
-            height: calc(100% + 40px);
-            border-radius: 40px;
-            border: 3px solid rgba(102, 126, 234, 0.5);
-            animation: ringRotate 6s linear infinite;
-        }
-
-        .icon-ring:nth-child(2) {
-            animation-delay: -3s;
-            border-color: rgba(118, 75, 162, 0.5);
-        }
-
-        @keyframes ringRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* TITLE */
-        .title {
-            font-size: 3em;
-            font-weight: 900;
-            background: linear-gradient(135deg, 
-                #667eea 0%, #764ba2 25%, 
-                #f093fb 50%, #f5576c 75%, 
-                #667eea 100%);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 4s ease infinite;
-            margin-bottom: 15px;
-            text-shadow: 0 0 40px rgba(102, 126, 234, 0.5);
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .subtitle {
-            font-size: 1.3em;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 35px;
-            letter-spacing: 2px;
-            animation: textGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-            50% { text-shadow: 0 0 30px rgba(102,126,234,0.8), 0 0 60px rgba(118,75,162,0.4); }
-        }
-
-        /* FEATURES */
-        .features {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 40px;
-            gap: 20px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 20px 15px;
-            flex: 1;
-            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: cardEntry 1s ease-out;
-            cursor: pointer;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
         }
 
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes cardEntry {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -402,227 +84,189 @@
             }
         }
 
+        /* APP ICON - simple */
+        .app-icon-wrapper {
+            position: relative;
+            width: clamp(100px, 20vw, 140px);
+            height: clamp(100px, 20vw, 140px);
+            margin: 0 auto 25px;
+        }
+
+        .app-icon {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(50px, 10vw, 70px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .app-icon:hover {
+            transform: scale(1.05);
+        }
+
+        /* TITLE */
+        .title {
+            font-size: clamp(1.8em, 6vw, 3em);
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: clamp(0.9em, 4vw, 1.3em);
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 30px;
+        }
+
+        /* FEATURES - grid untuk responsif */
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 15px 12px;
+            min-width: 100px;
+            flex: 1;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
         .feature-card:hover {
-            transform: translateY(-10px) scale(1.05);
+            transform: translateY(-5px);
             background: rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
         }
 
         .feature-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            animation: bounceFeature 2s ease-in-out infinite;
-        }
-
-        .feature-card:nth-child(2) .feature-icon { animation-delay: 0.3s; }
-        .feature-card:nth-child(3) .feature-icon { animation-delay: 0.6s; }
-
-        @keyframes bounceFeature {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            font-size: 2em;
+            margin-bottom: 8px;
         }
 
         .feature-text {
             color: white;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
         /* DOWNLOAD BUTTON */
         .download-button {
-            display: inline-block;
-            padding: 22px 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: clamp(14px, 4vw, 22px) clamp(30px, 8vw, 60px);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             text-decoration: none;
             border-radius: 60px;
-            font-size: 1.4em;
+            font-size: clamp(1em, 4vw, 1.4em);
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
-            animation: buttonGlow 3s ease-in-out infinite;
-            z-index: 1;
-        }
-
-        @keyframes buttonGlow {
-            0%, 100% { box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5); }
-            50% { box-shadow: 0 20px 60px rgba(118, 75, 162, 0.8), 0 0 100px rgba(102, 126, 234, 0.4); }
-        }
-
-        .download-button::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.2), 
-                transparent);
-            animation: buttonShine 2s linear infinite;
-        }
-
-        @keyframes buttonShine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
         }
 
         .download-button:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 25px 60px rgba(118, 75, 162, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(118, 75, 162, 0.5);
         }
 
         .download-button:active {
-            transform: translateY(-3px) scale(0.98);
-        }
-
-        /* PARTICLES */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            animation: particleFloat 2s ease-out forwards;
-            font-size: 20px;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(0);
-            }
+            transform: translateY(0);
         }
 
         /* VERSION BADGE */
         .version-badge {
             display: inline-block;
-            margin-top: 25px;
-            padding: 12px 25px;
-            background: rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 30px;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9em;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeIn 1.5s ease-out;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85em;
+            font-size: clamp(0.75em, 3vw, 0.9em);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* DOWNLOAD COUNTER */
+        /* COUNTER */
         .counter {
             color: rgba(255, 255, 255, 0.7);
-            margin-top: 15px;
-            font-size: 0.95em;
+            margin-top: 12px;
+            font-size: 0.9em;
         }
 
         .counter-number {
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: bold;
             color: #feca57;
-            text-shadow: 0 0 20px rgba(254, 202, 87, 0.5);
         }
 
-        /* RESPONSIVE */
+        /* Responsive untuk tablet dan mobile */
         @media (max-width: 768px) {
+            .features {
+                gap: 12px;
+            }
+            
+            .feature-card {
+                padding: 12px 10px;
+            }
+            
+            .feature-icon {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
             .main-container {
-                padding: 30px 20px;
+                padding: 25px 18px;
             }
-            .title {
-                font-size: 2em;
-            }
+            
             .features {
                 flex-direction: column;
             }
-            .download-button {
-                padding: 18px 40px;
-                font-size: 1.1em;
+            
+            .feature-card {
+                min-width: auto;
             }
+        }
+
+        /* Animasi sederhana untuk loading state */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .loading {
+            animation: pulse 1s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
-    <!-- STARS -->
-    <div class="stars-container" id="stars"></div>
-
-    <!-- SHOOTING STARS -->
-    <div class="shooting-star" style="top: 10%; left: 80%; --shoot-delay: 0s;"></div>
-    <div class="shooting-star" style="top: 30%; left: 70%; --shoot-delay: 2s;"></div>
-    <div class="shooting-star" style="top: 60%; left: 90%; --shoot-delay: 4s;"></div>
-
-    <!-- PLANETS -->
-    <div class="planet-container">
-        <div class="planet earth"></div>
-        <div class="planet moon"></div>
-        <div class="planet saturn">
-            <div class="saturn-ring"></div>
-        </div>
-        <div class="planet mars"></div>
-    </div>
-
-    <!-- ASTRONAUT SVG -->
-    <div class="astronaut-container" style="top: 15%; left: 10%;">
-        <svg class="astronaut" width="120" height="180" viewBox="0 0 120 180">
-            <!-- Helmet -->
-            <circle cx="60" cy="45" r="35" fill="white" stroke="#667eea" stroke-width="3"/>
-            <circle cx="60" cy="45" r="25" fill="#87CEEB" opacity="0.3"/>
-            <!-- Visor -->
-            <ellipse cx="60" cy="42" rx="22" ry="18" fill="#1a1a2e" opacity="0.8"/>
-            <ellipse cx="60" cy="38" rx="15" ry="10" fill="rgba(102,126,234,0.3)"/>
-            <!-- Body -->
-            <rect x="35" y="75" width="50" height="65" rx="15" fill="white" stroke="#667eea" stroke-width="2"/>
-            <!-- Backpack -->
-            <rect x="25" y="78" width="15" height="50" rx="8" fill="#e0e0e0" stroke="#667eea" stroke-width="2"/>
-            <!-- Arms -->
-            <rect x="15" y="80" width="22" height="12" rx="6" fill="white" stroke="#667eea" stroke-width="2"/>
-            <rect x="83" y="80" width="22" height="12" rx="6" fill="white" stroke="#667eea" stroke-width="2"/>
-            <!-- Legs -->
-            <rect x="40" y="135" width="15" height="35" rx="7" fill="white" stroke="#667eea" stroke-width="2"/>
-            <rect x="65" y="135" width="15" height="35" rx="7" fill="white" stroke="#667eea" stroke-width="2"/>
-            <!-- Boots -->
-            <rect x="37" y="165" width="20" height="12" rx="6" fill="#667eea"/>
-            <rect x="63" y="165" width="20" height="12" rx="6" fill="#667eea"/>
-            <!-- Tether -->
-            <path d="M 25 85 Q 10 100 5 90" stroke="#ff6b6b" stroke-width="2" fill="none"/>
-        </svg>
-    </div>
-
-    <!-- SECOND ASTRONAUT -->
-    <div class="astronaut-container" style="bottom: 20%; right: 15%;">
-        <svg class="astronaut" width="80" height="120" viewBox="0 0 120 180" style="animation-delay: -4s;">
-            <circle cx="60" cy="45" r="35" fill="white" stroke="#f5576c" stroke-width="3"/>
-            <circle cx="60" cy="45" r="25" fill="#87CEEB" opacity="0.3"/>
-            <ellipse cx="60" cy="42" rx="22" ry="18" fill="#1a1a2e" opacity="0.8"/>
-            <rect x="35" y="75" width="50" height="65" rx="15" fill="white" stroke="#f5576c" stroke-width="2"/>
-            <rect x="25" y="78" width="15" height="50" rx="8" fill="#e0e0e0" stroke="#f5576c" stroke-width="2"/>
-            <rect x="15" y="80" width="22" height="12" rx="6" fill="white" stroke="#f5576c" stroke-width="2"/>
-            <rect x="83" y="80" width="22" height="12" rx="6" fill="white" stroke="#f5576c" stroke-width="2"/>
-            <rect x="40" y="135" width="15" height="35" rx="7" fill="white" stroke="#f5576c" stroke-width="2"/>
-            <rect x="65" y="135" width="15" height="35" rx="7" fill="white" stroke="#f5576c" stroke-width="2"/>
-            <path d="M 95 85 Q 110 100 115 90" stroke="#48dbfb" stroke-width="2" fill="none"/>
-        </svg>
-    </div>
+    <!-- Stars sederhana dengan CSS gradient -->
+    <div class="stars-simple"></div>
 
     <!-- MAIN CONTENT -->
     <div class="main-container">
-        <!-- Glowing orb behind icon -->
-        <div class="glowing-orb" style="top: 10%; left: 50%; transform: translateX(-50%);"></div>
-
         <!-- App Icon -->
         <div class="app-icon-wrapper">
-            <div class="icon-ring"></div>
-            <div class="icon-ring"></div>
             <div class="app-icon">🚀</div>
         </div>
 
@@ -663,180 +307,152 @@
     </div>
 
     <script>
-        // CREATE STARS
-        function createStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 3 + 1;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-                star.style.setProperty('--delay', Math.random() * 3 + 's');
-                container.appendChild(star);
-            }
-        }
-
-        // DOWNLOAD COUNTER ANIMATION
+        // Simple counter animation dengan requestAnimationFrame untuk performa lebih baik
         function animateCounter() {
             const counter = document.getElementById('downloadCount');
             const target = 287654;
-            const duration = 2500;
-            const steps = 100;
-            let current = 0;
-            const increment = target / steps;
+            const duration = 2000;
+            let startTime = null;
+            let startValue = 0;
             
-            const interval = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(interval);
+            function updateCounter(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function untuk animasi lebih halus
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.floor(startValue + (target - startValue) * easeOutQuart);
+                counter.textContent = currentValue.toLocaleString();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
                 }
-                counter.textContent = Math.floor(current).toLocaleString();
-            }, duration / steps);
+            }
+            
+            requestAnimationFrame(updateCounter);
         }
 
-        // DOWNLOAD BUTTON CLICK
-        document.getElementById('downloadBtn').addEventListener('click', function(e) {
-            e.preventDefault();
+        // Simple particle effect dengan performa lebih baik
+        function createSimpleParticles(x, y) {
+            const particles = [];
+            const emojis = ['✨', '⭐', '🌟', '🚀', '💜'];
             
-            // Button animation
-            this.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 200);
-
-            // Create particles
-            createParticles(e);
-            
-            // Show notification
-            showNotification();
-            
-            // Rocket effect
-            createRocketEffect();
-        });
-
-        // PARTICLES EFFECT
-        function createParticles(e) {
-            const button = e.target;
-            const rect = button.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            const emojis = ['✨', '💫', '⭐', '🌟', '🔥', '💥', '🚀', '💜'];
-            
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 12; i++) {
                 const particle = document.createElement('div');
-                particle.className = 'particle';
                 particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                particle.style.left = centerX + 'px';
-                particle.style.top = centerY + 'px';
-                particle.style.setProperty('--tx', (Math.random() - 0.5) * 400 + 'px');
-                particle.style.setProperty('--ty', (Math.random() - 0.5) * 400 + 'px');
+                particle.style.cssText = `
+                    position: fixed;
+                    left: ${x}px;
+                    top: ${y}px;
+                    font-size: 20px;
+                    pointer-events: none;
+                    z-index: 1000;
+                    opacity: 1;
+                    transition: all 0.8s ease-out;
+                `;
+                
+                const angle = (Math.PI * 2 * i) / 12;
+                const distance = 80 + Math.random() * 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
                 
                 document.body.appendChild(particle);
                 
-                setTimeout(() => {
-                    particle.remove();
-                }, 2000);
+                // Gunakan requestAnimationFrame untuk animasi
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translate(${tx}px, ${ty}px)`;
+                    particle.style.opacity = '0';
+                });
+                
+                setTimeout(() => particle.remove(), 800);
             }
         }
 
-        // ROCKET EFFECT
-        function createRocketEffect() {
-            const rocket = document.createElement('div');
-            rocket.style.cssText = `
-                position: fixed;
-                left: 50%;
-                top: 50%;
-                font-size: 50px;
-                pointer-events: none;
-                z-index: 1000;
-                animation: rocketLaunch 1.5s ease-out forwards;
-            `;
-            rocket.textContent = '🚀';
-            
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes rocketLaunch {
-                    0% {
-                        transform: translate(-50%, -50%) scale(0.5);
-                        opacity: 1;
-                    }
-                    100% {
-                        transform: translate(-50%, -200%) scale(2);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            document.body.appendChild(rocket);
-            
-            setTimeout(() => {
-                rocket.remove();
-                style.remove();
-            }, 1500);
-        }
-
-        // NOTIFICATION
-        function showNotification() {
+        // Simple notification
+        function showSimpleNotification(message) {
             const notif = document.createElement('div');
             notif.style.cssText = `
                 position: fixed;
-                top: 30px;
-                right: 30px;
-                background: linear-gradient(135deg, rgba(102,126,234,0.9), rgba(118,75,162,0.9));
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
                 color: white;
-                padding: 20px 30px;
-                border-radius: 20px;
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255,255,255,0.3);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                padding: 15px 25px;
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.2);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                 z-index: 1000;
-                animation: slideIn 0.5s ease-out;
+                animation: slideInRight 0.3s ease-out;
                 font-weight: bold;
+                font-size: 14px;
             `;
-            notif.innerHTML = '🚀 Download Dimulai! <br><small style="opacity:0.8">Menjelajah ke galaksi berikutnya...</small>';
+            notif.innerHTML = message;
+            
+            // Tambahkan keyframes jika belum ada
+            if (!document.querySelector('#notifStyles')) {
+                const style = document.createElement('style');
+                style.id = 'notifStyles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
             
             document.body.appendChild(notif);
             
             setTimeout(() => {
-                notif.style.animation = 'slideOut 0.5s ease-out forwards';
-                setTimeout(() => notif.remove(), 500);
-            }, 3000);
+                notif.style.animation = 'slideOutRight 0.3s ease-out forwards';
+                setTimeout(() => notif.remove(), 300);
+            }, 2500);
         }
 
-        // NOTIFICATION ANIMATIONS
-        const notifStyles = document.createElement('style');
-        notifStyles.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(notifStyles);
+        // Handle download click
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Button feedback
+            const originalText = this.innerHTML;
+            this.innerHTML = '⏳ MEMPROSES...';
+            this.style.opacity = '0.8';
+            
+            // Dapatkan posisi klik
+            const rect = this.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Efek partikel
+            createSimpleParticles(centerX, centerY);
+            
+            // Notifikasi
+            showSimpleNotification('🚀 Download Dimulai! Menjelajah ke galaksi berikutnya...');
+            
+            // Simulasi loading sebentar
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.style.opacity = '1';
+                // Arahkan ke link download
+                window.location.href = this.href;
+            }, 500);
+        });
 
-        // INITIALIZE
-        createStars();
+        // Inisialisasi counter
         animateCounter();
-
-        // MOUSE PARALLAX EFFECT
-        document.addEventListener('mousemove', (e) => {
-            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
-            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
-            
-            document.querySelectorAll('.planet').forEach(planet => {
-                planet.style.transform = `translate(${moveX * 20}px, ${moveY * 20}px)`;
-            });
-            
-            document.querySelectorAll('.astronaut-container').forEach(astro => {
-                astro.style.transform = `translate(${moveX * 15}px, ${moveY * 15}px)`;
+        
+        // Optional: Simple hover effect untuk feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const text = card.querySelector('.feature-text').innerText;
+                showSimpleNotification(`✨ ${text} akan segera hadir!`);
             });
         });
     </script>
