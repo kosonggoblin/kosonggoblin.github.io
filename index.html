@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download App - NilaiX</title>
+    <title>NilaiX - Terminal Download</title>
     <style>
         * {
             margin: 0;
@@ -11,8 +11,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1b2735 0%, #090a0f 100%);
+            font-family: 'Courier New', 'Fira Code', 'Monaco', 'Cascadia Code', monospace;
+            background: #0a0a0a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -20,441 +20,713 @@
             padding: 20px;
         }
 
-        /* Simplified Stars - hanya dengan CSS gradient */
-        .stars-simple {
+        /* Terminal Container */
+        .terminal-container {
+            width: 100%;
+            max-width: 800px;
+            background: #0c0c0c;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Terminal Header */
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .window-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .window-btn.red { background: #ff5f56; }
+        .window-btn.yellow { background: #ffbd2e; }
+        .window-btn.green { background: #27c93f; }
+
+        .terminal-title {
+            color: #6b9c6b;
+            font-size: 12px;
+            font-family: monospace;
+            margin-left: 10px;
+            flex: 1;
+        }
+
+        .terminal-title::before {
+            content: "⎯ ";
+        }
+
+        .terminal-title::after {
+            content: " ⎯";
+        }
+
+        /* Terminal Body */
+        .terminal-body {
+            padding: 20px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Terminal Output */
+        .terminal-output {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .line {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .prompt {
+            color: #4afc4a;
+            font-weight: bold;
+        }
+
+        .command {
+            color: #ffffff;
+        }
+
+        .output-text {
+            color: #b0b0b0;
+            margin-left: 15px;
+            margin-top: 5px;
+        }
+
+        .output-text.success {
+            color: #4afc4a;
+        }
+
+        .output-text.warning {
+            color: #ffbd2e;
+        }
+
+        .output-text.error {
+            color: #ff5f56;
+        }
+
+        .output-text.info {
+            color: #5bc0ff;
+        }
+
+        /* ASCII Art */
+        .ascii-art {
+            color: #4afc4a;
+            font-size: 10px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            background: #1a1a1a;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 1px solid #2a2a2a;
+        }
+
+        .progress-bar {
+            background: #4afc4a;
+            height: 20px;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            color: #4afc4a;
+            font-size: 11px;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Feature List */
+        .feature-list {
+            margin: 15px 0;
+            margin-left: 15px;
+        }
+
+        .feature-item {
+            color: #b0b0b0;
+            margin-bottom: 5px;
+        }
+
+        .feature-item::before {
+            content: "› ";
+            color: #4afc4a;
+        }
+
+        /* Download Input Line */
+        .download-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .download-prompt {
+            color: #4afc4a;
+            font-weight: bold;
+        }
+
+        .download-command {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 5px 10px;
+            flex: 1;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-command:hover {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: #4afc4a;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Button Terminal */
+        .terminal-button {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #4afc4a;
+            padding: 8px 20px;
+            font-family: monospace;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .terminal-button:hover {
+            background: #2a2a2a;
+            border-color: #4afc4a;
+            transform: translateY(-1px);
+        }
+
+        .terminal-button:active {
+            transform: translateY(0);
+        }
+
+        /* Stats */
+        .stats {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 11px;
+        }
+
+        .stat-item {
+            color: #6b9c6b;
+        }
+
+        .stat-value {
+            color: #4afc4a;
+            font-weight: bold;
+        }
+
+        /* Input Line */
+        .input-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .input-prompt {
+            color: #4afc4a;
+        }
+
+        .input-field {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: monospace;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3a3a3a;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .terminal-body {
+                padding: 15px;
+            }
+            
+            .ascii-art {
+                font-size: 7px;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .download-line {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .download-command {
+                width: 100%;
+            }
+        }
+
+        /* Typing Animation */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 1s steps(40, end);
+        }
+
+        /* Matrix Effect */
+        .matrix-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 80px 20px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 150px 90px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 250px 150px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 350px 50px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 500px 200px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 600px 300px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 750px 100px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 900px 400px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 1050px 250px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 1200px 150px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 50px 400px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 300px 500px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 550px 600px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 800px 700px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 1000px 550px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 1100px 650px, #fff, rgba(0,0,0,0));
-            background-repeat: no-repeat;
-            background-size: 200px 200px, 150px 150px, 180px 180px, 250px 250px, 
-                            220px 220px, 160px 160px, 240px 240px, 170px 170px,
-                            260px 260px, 210px 210px, 190px 190px, 230px 230px,
-                            270px 270px, 200px 200px, 250px 250px, 180px 180px,
-                            280px 280px, 220px 220px;
-            opacity: 0.6;
-        }
-
-        /* MAIN CONTAINER - lebih ringan */
-        .main-container {
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: clamp(30px, 5vw, 50px);
-            text-align: center;
-            max-width: 650px;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* APP ICON - simple */
-        .app-icon-wrapper {
-            position: relative;
-            width: clamp(100px, 20vw, 140px);
-            height: clamp(100px, 20vw, 140px);
-            margin: 0 auto 25px;
-        }
-
-        .app-icon {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(50px, 10vw, 70px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-            transition: transform 0.3s ease;
-        }
-
-        .app-icon:hover {
-            transform: scale(1.05);
-        }
-
-        /* TITLE */
-        .title {
-            font-size: clamp(1.8em, 6vw, 3em);
-            font-weight: 900;
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: clamp(0.9em, 4vw, 1.3em);
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 30px;
-        }
-
-        /* FEATURES - grid untuk responsif */
-        .features {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 35px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 15px 12px;
-            min-width: 100px;
-            flex: 1;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            background: rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.5);
-        }
-
-        .feature-icon {
-            font-size: 2em;
-            margin-bottom: 8px;
-        }
-
-        .feature-text {
-            color: white;
-            font-weight: bold;
-            font-size: 0.85em;
-        }
-
-        /* DOWNLOAD BUTTON */
-        .download-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: clamp(14px, 4vw, 22px) clamp(30px, 8vw, 60px);
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            text-decoration: none;
-            border-radius: 60px;
-            font-size: clamp(1em, 4vw, 1.4em);
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .download-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(118, 75, 162, 0.5);
-        }
-
-        .download-button:active {
-            transform: translateY(0);
-        }
-
-        /* VERSION BADGE */
-        .version-badge {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 8px 20px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 30px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85em;
-            font-size: clamp(0.75em, 3vw, 0.9em);
-        }
-
-        /* COUNTER */
-        .counter {
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 12px;
-            font-size: 0.9em;
-        }
-
-        .counter-number {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #feca57;
-        }
-
-        /* Responsive untuk tablet dan mobile */
-        @media (max-width: 768px) {
-            .features {
-                gap: 12px;
-            }
-            
-            .feature-card {
-                padding: 12px 10px;
-            }
-            
-            .feature-icon {
-                font-size: 1.8em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-container {
-                padding: 25px 18px;
-            }
-            
-            .features {
-                flex-direction: column;
-            }
-            
-            .feature-card {
-                min-width: auto;
-            }
-        }
-
-        /* Animasi sederhana untuk loading state */
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        .loading {
-            animation: pulse 1s ease-in-out infinite;
+            z-index: -1;
+            opacity: 0.03;
         }
     </style>
 </head>
 <body>
-    <!-- Stars sederhana dengan CSS gradient -->
-    <div class="stars-simple"></div>
+    <!-- Matrix Background -->
+    <canvas class="matrix-bg" id="matrixCanvas"></canvas>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-container">
-        <!-- App Icon -->
-        <div class="app-icon-wrapper">
-            <div class="app-icon">🚀</div>
+    <div class="terminal-container">
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+            <div class="window-buttons">
+                <div class="window-btn red"></div>
+                <div class="window-btn yellow"></div>
+                <div class="window-btn green"></div>
+            </div>
+            <div class="terminal-title">user@nilaiterminal:~/downloads</div>
         </div>
 
-        <!-- Title -->
-        <h1 class="title">Chat NilaiX</h1>
-        <p class="subtitle">🌌 Bergabunglah Untuk Merubah Nilai Error Anda</p>
+        <!-- Terminal Body -->
+        <div class="terminal-body" id="terminalBody">
+            <div class="terminal-output" id="terminalOutput">
+                <!-- ASCII Art -->
+                <div class="ascii-art">
+    ╔═══════════════════════════════════════════════════════════╗
+    ║                                                           ║
+    ║    ███╗   ██╗██╗██╗      █████╗ ██╗██╗  ██╗              ║
+    ║    ████╗  ██║██║██║     ██╔══██╗██║╚██╗██╔╝              ║
+    ║    ██╔██╗ ██║██║██║     ███████║██║ ╚███╔╝               ║
+    ║    ██║╚██╗██║██║██║     ██╔══██║██║ ██╔██╗               ║
+    ║    ██║ ╚████║██║███████╗██║  ██║██║██╔╝ ██╗              ║
+    ║    ╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝              ║
+    ║                                                           ║
+    ║              TERMINAL DOWNLOAD MANAGER v3.0.1             ║
+    ╚═══════════════════════════════════════════════════════════╝
+                </div>
 
-        <!-- Features -->
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <div class="feature-text">Kecepatan<br>Cahaya</div>
+                <!-- System Info -->
+                <div class="line">
+                    <span class="prompt">$</span>
+                    <span class="command"> cat /etc/nilax-release</span>
+                </div>
+                <div class="output-text info">
+                    NilaiX Terminal v3.0.1 (Galactic Edition)<br>
+                    Built on: 2026-06-03<br>
+                    Architecture: x86_64 | ARM64
+                </div>
+
+                <!-- Features -->
+                <div class="line">
+                    <span class="prompt">$</span>
+                    <span class="command"> ./nilax --features</span>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">Lightning Speed Download Engine</div>
+                    <div class="feature-item">Military-grade Encryption (AES-256)</div>
+                    <div class="feature-item">Multi-threaded Processing</div>
+                    <div class="feature-item">Zero-latency Installation</div>
+                    <div class="feature-item">Cross-platform Support</div>
+                </div>
+
+                <!-- Download Stats -->
+                <div class="line">
+                    <span class="prompt">$</span>
+                    <span class="command"> du -sh /downloads/nilax-stats</span>
+                </div>
+                <div class="output-text success" id="statsText">
+                    Total Downloads: 287,654<br>
+                    Active Users: 89,234<br>
+                    Success Rate: 99.97%
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="line">
+                    <span class="prompt">$</span>
+                    <span class="command"> wget --progress NilaiX.apk</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">[0%] Initializing connection...</div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <div class="feature-text">Keamanan<br>Maksimal</div>
+
+            <!-- Download Command Line -->
+            <div class="download-line">
+                <span class="download-prompt">┌─[user@nilax:~]</span>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">✨</div>
-                <div class="feature-text">Fitur<br>Magis</div>
+            <div class="download-line">
+                <span class="download-prompt">└─$</span>
+                <div class="download-command" id="downloadCommand">
+                    ./install_nilax --accept-license
+                    <span class="cursor-blink"></span>
+                </div>
             </div>
-        </div>
 
-        <!-- Download Button -->
-        <a href="https://kosonggoblin.github.io/NilaiE.apk" class="download-button" id="downloadBtn">
-            🚀 DOWNLOAD SEKARANG
-        </a>
+            <!-- Stats Footer -->
+            <div class="stats">
+                <div class="stat-item">📦 Package: <span class="stat-value">NilaiX.apk</span></div>
+                <div class="stat-item">💾 Size: <span class="stat-value">28 MB</span></div>
+                <div class="stat-item">🔒 Security: <span class="stat-value">AES-256</span></div>
+                <div class="stat-item">🌐 Mirror: <span class="stat-value">Primary</span></div>
+            </div>
 
-        <!-- Version Badge -->
-        <div class="version-badge">
-            📱 Versi 3.0.1 • 28 MB • Semua Platform
-        </div>
-
-        <!-- Download Counter -->
-        <div class="counter">
-            🌟 Bergabung dengan <span class="counter-number" id="downloadCount">0</span>+ sang penjaga
+            <!-- Input Line -->
+            <div class="input-line">
+                <span class="input-prompt">λ</span>
+                <input type="text" class="input-field" id="commandInput" placeholder="Ketik 'help' untuk bantuan atau 'download' untuk memulai..." autocomplete="off">
+            </div>
         </div>
     </div>
 
     <script>
-        // Simple counter animation dengan requestAnimationFrame untuk performa lebih baik
-        function animateCounter() {
-            const counter = document.getElementById('downloadCount');
-            const target = 287654;
-            const duration = 2000;
-            let startTime = null;
-            let startValue = 0;
+        // Matrix Canvas Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const fontSize = 14;
+        let columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            function updateCounter(currentTime) {
-                if (!startTime) startTime = currentTime;
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
                 
-                // Easing function untuk animasi lebih halus
-                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-                const currentValue = Math.floor(startValue + (target - startValue) * easeOutQuart);
-                counter.textContent = currentValue.toLocaleString();
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = canvas.width / fontSize;
+            for (let i = 0; i < columns; i++) {
+                if (!drops[i]) drops[i] = Math.random() * -100;
+            }
+        });
+
+        // Terminal Functionality
+        let progress = 0;
+        let isDownloading = false;
+        let downloadInterval = null;
+
+        // Simulate progress bar
+        function startDownload() {
+            if (isDownloading) return;
+            
+            isDownloading = true;
+            progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            // Add log entry
+            addTerminalLog('Starting download sequence...', 'info');
+            addTerminalLog('Establishing secure connection...', 'info');
+            addTerminalLog('✓ Connection established', 'success');
+            
+            downloadInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += Math.random() * 8 + 2;
+                    if (progress > 100) progress = 100;
+                    
+                    progressBar.style.width = progress + '%';
+                    
+                    let statusText = '';
+                    if (progress < 20) statusText = '[~] Connecting to server...';
+                    else if (progress < 40) statusText = '[~] Authenticating...';
+                    else if (progress < 60) statusText = '[~] Downloading data chunks...';
+                    else if (progress < 80) statusText = '[~] Verifying integrity...';
+                    else if (progress < 100) statusText = '[~] Finalizing installation...';
+                    else statusText = '[✓] Download complete!';
+                    
+                    progressText.innerHTML = `[${Math.floor(progress)}%] ${statusText}`;
+                    
+                    // Update progress text color
+                    if (progress >= 100) {
+                        progressText.style.color = '#4afc4a';
+                        completeDownload();
+                    }
+                } else {
+                    clearInterval(downloadInterval);
+                }
+            }, 100);
+        }
+        
+        function completeDownload() {
+            addTerminalLog('✓ NilaiX has been successfully installed!', 'success');
+            addTerminalLog('Run "./nilax --start" to launch the application', 'info');
+            addTerminalLog('Thank you for choosing NilaiX! 🚀', 'success');
+            isDownloading = false;
+            
+            // Update counter
+            updateDownloadCounter();
+        }
+        
+        function addTerminalLog(message, type = 'info') {
+            const output = document.getElementById('terminalOutput');
+            const logLine = document.createElement('div');
+            logLine.className = 'line';
+            
+            let colorClass = '';
+            switch(type) {
+                case 'success': colorClass = 'success'; break;
+                case 'error': colorClass = 'error'; break;
+                case 'warning': colorClass = 'warning'; break;
+                default: colorClass = 'info';
+            }
+            
+            logLine.innerHTML = `
+                <span class="prompt">$</span>
+                <span class="command">${message}</span>
+            `;
+            
+            output.appendChild(logLine);
+            
+            // Auto scroll
+            const terminalBody = document.getElementById('terminalBody');
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+        
+        function updateDownloadCounter() {
+            const statsText = document.getElementById('statsText');
+            const currentCount = 287654;
+            const newCount = currentCount + 1;
+            statsText.innerHTML = `
+                Total Downloads: ${newCount.toLocaleString()}<br>
+                Active Users: ${Math.floor(newCount * 0.31).toLocaleString()}<br>
+                Success Rate: 99.97%
+            `;
+        }
+        
+        function showHelp() {
+            addTerminalLog('Available commands:', 'info');
+            addTerminalLog('  help     - Show this help message', 'info');
+            addTerminalLog('  download - Start download/installation', 'info');
+            addTerminalLog('  status   - Show system status', 'info');
+            addTerminalLog('  clear    - Clear terminal screen', 'info');
+            addTerminalLog('  version  - Show version information', 'info');
+            addTerminalLog('  about    - About NilaiX', 'info');
+        }
+        
+        function showStatus() {
+            addTerminalLog(`System Status:`, 'info');
+            addTerminalLog(`  ● Download Progress: ${Math.floor(progress)}%`, progress >= 100 ? 'success' : 'info');
+            addTerminalLog(`  ● Connection: ${isDownloading ? 'Active' : 'Idle'}`, 'success');
+            addTerminalLog(`  ● Download Speed: ${Math.floor(Math.random() * 20 + 10)} MB/s`, 'info');
+            addTerminalLog(`  ● Security: Active (AES-256)`, 'success');
+        }
+        
+        function showVersion() {
+            addTerminalLog('NilaiX Terminal Download Manager v3.0.1', 'success');
+            addTerminalLog('Build: 2026-06-03', 'info');
+            addTerminalLog('License: MIT', 'info');
+            addTerminalLog('Author: NilaiX Team', 'info');
+        }
+        
+        function showAbout() {
+            addTerminalLog('NilaiX - Revolutionary Download Manager', 'success');
+            addTerminalLog('Experience lightning-fast downloads with military-grade security', 'info');
+            addTerminalLog('Website: https://nilax.io', 'info');
+            addTerminalLog('Documentation: https://docs.nilax.io', 'info');
+        }
+        
+        function clearTerminal() {
+            const output = document.getElementById('terminalOutput');
+            output.innerHTML = '';
+            addTerminalLog('Terminal cleared.', 'success');
+        }
+        
+        // Command input handler
+        const commandInput = document.getElementById('commandInput');
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.toLowerCase().trim();
+                commandInput.value = '';
                 
-                if (progress < 1) {
-                    requestAnimationFrame(updateCounter);
+                // Add command to terminal
+                addTerminalLog(command, 'info');
+                
+                // Process command
+                switch(command) {
+                    case 'download':
+                        startDownload();
+                        break;
+                    case 'help':
+                        showHelp();
+                        break;
+                    case 'status':
+                        showStatus();
+                        break;
+                    case 'clear':
+                        clearTerminal();
+                        break;
+                    case 'version':
+                        showVersion();
+                        break;
+                    case 'about':
+                        showAbout();
+                        break;
+                    case '':
+                        break;
+                    default:
+                        addTerminalLog(`Command not found: ${command}. Type 'help' for available commands.`, 'error');
                 }
             }
-            
-            requestAnimationFrame(updateCounter);
-        }
-
-        // Simple particle effect dengan performa lebih baik
-        function createSimpleParticles(x, y) {
-            const particles = [];
-            const emojis = ['✨', '⭐', '🌟', '🚀', '💜'];
-            
-            for (let i = 0; i < 12; i++) {
-                const particle = document.createElement('div');
-                particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                particle.style.cssText = `
-                    position: fixed;
-                    left: ${x}px;
-                    top: ${y}px;
-                    font-size: 20px;
-                    pointer-events: none;
-                    z-index: 1000;
-                    opacity: 1;
-                    transition: all 0.8s ease-out;
-                `;
-                
-                const angle = (Math.PI * 2 * i) / 12;
-                const distance = 80 + Math.random() * 40;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
-                
-                document.body.appendChild(particle);
-                
-                // Gunakan requestAnimationFrame untuk animasi
-                requestAnimationFrame(() => {
-                    particle.style.transform = `translate(${tx}px, ${ty}px)`;
-                    particle.style.opacity = '0';
-                });
-                
-                setTimeout(() => particle.remove(), 800);
-            }
-        }
-
-        // Simple notification
-        function showSimpleNotification(message) {
-            const notif = document.createElement('div');
-            notif.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
-                padding: 15px 25px;
-                border-radius: 15px;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255,255,255,0.2);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                z-index: 1000;
-                animation: slideInRight 0.3s ease-out;
-                font-weight: bold;
-                font-size: 14px;
-            `;
-            notif.innerHTML = message;
-            
-            // Tambahkan keyframes jika belum ada
-            if (!document.querySelector('#notifStyles')) {
-                const style = document.createElement('style');
-                style.id = 'notifStyles';
-                style.textContent = `
-                    @keyframes slideInRight {
-                        from { transform: translateX(100%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-                    @keyframes slideOutRight {
-                        to { transform: translateX(100%); opacity: 0; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            document.body.appendChild(notif);
-            
-            setTimeout(() => {
-                notif.style.animation = 'slideOutRight 0.3s ease-out forwards';
-                setTimeout(() => notif.remove(), 300);
-            }, 2500);
-        }
-
-        // Handle download click
-        const downloadBtn = document.getElementById('downloadBtn');
-        
-        downloadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Button feedback
-            const originalText = this.innerHTML;
-            this.innerHTML = '⏳ MEMPROSES...';
-            this.style.opacity = '0.8';
-            
-            // Dapatkan posisi klik
-            const rect = this.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            // Efek partikel
-            createSimpleParticles(centerX, centerY);
-            
-            // Notifikasi
-            showSimpleNotification('🚀 Download Dimulai! Menjelajah ke galaksi berikutnya...');
-            
-            // Simulasi loading sebentar
-            setTimeout(() => {
-                this.innerHTML = originalText;
-                this.style.opacity = '1';
-                // Arahkan ke link download
-                window.location.href = this.href;
-            }, 500);
         });
-
-        // Inisialisasi counter
-        animateCounter();
         
-        // Optional: Simple hover effect untuk feature cards
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const text = card.querySelector('.feature-text').innerText;
-                showSimpleNotification(`✨ ${text} akan segera hadir!`);
-            });
+        // Click handler for download command text
+        const downloadCommand = document.getElementById('downloadCommand');
+        downloadCommand.addEventListener('click', () => {
+            startDownload();
+            addTerminalLog('download', 'info');
         });
+        
+        // Focus input on page load
+        commandInput.focus();
+        
+        // Click anywhere to focus input
+        document.body.addEventListener('click', () => {
+            commandInput.focus();
+        });
+        
+        // Initial welcome message with typing effect
+        setTimeout(() => {
+            addTerminalLog('Welcome to NilaiX Terminal Download Manager!', 'success');
+            addTerminalLog('Type "help" to see available commands or "download" to start installation', 'info');
+        }, 500);
+        
+        // Animated cursor for download command
+        setInterval(() => {
+            const cursor = document.querySelector('.cursor-blink');
+            if (cursor) {
+                cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
+            }
+        }, 500);
     </script>
 </body>
 </html>
